@@ -26,3 +26,9 @@ test("logout", async () => {
   expect(logoutRes.status).toBe(200);
   expect(logoutRes.body.message).toBe("logout successful");
 });
+
+test("register missing required data", async () => {
+  const res = await request(app).post("/api/auth").send({});
+  expect(res.status).toBe(400);
+  expect(res.body.message).toBe("name, email, and password are required");
+});
