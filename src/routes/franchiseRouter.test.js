@@ -60,3 +60,12 @@ test("get user franchises", async () => {
     }
   }
 });
+
+test("delete franchise", async () => {
+  const franchiseID = await createFranchise();
+  const res = await request(app)
+    .delete(`/api/franchise/${franchiseID}`)
+    .set("Authorization", `Bearer ${token}`);
+  expect(res.status).toBe(200);
+  expect(res.body.message).toBe("franchise deleted");
+});
