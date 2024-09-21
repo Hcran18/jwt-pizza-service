@@ -54,7 +54,7 @@ test("get all franchises", async () => {
 });
 
 test("get user franchises", async () => {
-  const franchiseID = await createFranchise();
+  await createFranchise();
   const res = await request(app)
     .get(`/api/franchise/${adminID}`)
     .set("Authorization", `Bearer ${token}`);

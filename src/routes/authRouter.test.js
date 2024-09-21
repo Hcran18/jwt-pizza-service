@@ -24,6 +24,7 @@ test("login", async () => {
   expect(loginRes.body.token).toMatch(/^[a-zA-Z0-9\-_]*\.[a-zA-Z0-9\-_]*\.[a-zA-Z0-9\-_]*$/);
 
   const { password, ...user } = { ...testUser, roles: [{ role: "diner" }] };
+  expect(typeof password).toBe("string");
   expect(loginRes.body.user).toMatchObject(user);
 });
 
@@ -36,13 +37,19 @@ test("logout", async () => {
 });
 
 test("updateUser", async () => {
-  const updatedUser = { email: "updatedEmail@email.com", password: "newPassword" };
+  const updatedUser = { name: "new name", email: "test@test.com", password: "password" };
+  const registerRes = await request(app).post("/api/auth").send(updatedUser);
+  const updatedUserAuthToken = registerRes.body.token;
+  const userId = registerRes.body.user.id;
+  const updateInfo = { email: "new@test.com", password: "new password" };
+
   const updateUserRes = await request(app)
-    .put(`/api/auth/${testUserId}`)
-    .set("Authorization", `Bearer ${testUserAuthToken}`)
-    .send(updatedUser);
+    .put(`/api/auth/${userId}`)
+    .set("Authorization", `Bearer ${updatedUserAuthToken}`)
+    .send(updateInfo);
   expect(updateUserRes.status).toBe(200);
 
-  const { password, ...updatedUserWithoutPassword } = updatedUser;
+  const { password, ...updatedUserWithoutPassword } = { ...updatedUser, ...updateInfo };
+  expect(typeof password).toBe("string");
   expect(updateUserRes.body).toMatchObject(updatedUserWithoutPassword);
 });
