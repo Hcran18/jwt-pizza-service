@@ -39,3 +39,21 @@ test("add item to menu", async () => {
     .send(item);
   expect(res.status).toBe(200);
 });
+
+test("add item to menu as non-admin", async () => {
+  const testUser = { name: "pizza diner", email: "reg@test.com", password: "a" };
+  const registerRes = await request(app).post("/api/auth").send(testUser);
+  const token = registerRes.body.token;
+
+  const item = {
+    title: "Student",
+    description: "No topping, no sauce, just carbs",
+    image: "pizza9.png",
+    price: 0.0001,
+  };
+  const res = await request(app)
+    .put("/api/order/menu")
+    .set("Authorization", `Bearer ${token}`)
+    .send(item);
+  expect(res.status).toBe(403);
+});
