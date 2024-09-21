@@ -93,7 +93,7 @@ test("add item to menu as non-admin", async () => {
 test("get menu", async () => {
   const res = await request(app).get("/api/order/menu");
   expect(res.status).toBe(200);
-  body = res.body;
+  const body = res.body;
 
   for (let item of body) {
     expect(item).toEqual(
