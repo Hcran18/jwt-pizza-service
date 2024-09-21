@@ -1,6 +1,10 @@
 const request = require("supertest");
 const app = require("../service");
 const { DB, Role } = require("../database/database.js");
+const e = require("express");
+
+let adminUser;
+let token;
 
 function randomName() {
   return Math.random().toString(36).substring(2, 12);
@@ -23,10 +27,12 @@ async function login(user) {
   return res.body.token;
 }
 
-test("add item to menu", async () => {
-  const adminUser = await createAdminUser();
-  const adminToken = await login(adminUser);
+beforeAll(async () => {
+  adminUser = await createAdminUser();
+  token = await login(adminUser);
+});
 
+test("add item to menu", async () => {
   const item = {
     title: "Student",
     description: "No topping, no sauce, just carbs",
@@ -35,7 +41,7 @@ test("add item to menu", async () => {
   };
   const res = await request(app)
     .put("/api/order/menu")
-    .set("Authorization", `Bearer ${adminToken}`)
+    .set("Authorization", `Bearer ${token}`)
     .send(item);
   expect(res.status).toBe(200);
 });
@@ -71,6 +77,29 @@ test("get menu", async () => {
         image: expect.any(String),
         price: expect.any(Number),
         description: expect.any(String),
+      })
+    );
+  }
+});
+
+test("create order", async () => {
+  const item = {
+    franchiseId: 1,
+    storeId: 1,
+    items: [{ menuId: 1, description: "Veggie", price: 0.05 }],
+  };
+  const res = await request(app)
+    .post("/api/order")
+    .set("Authorization", `Bearer ${token}`)
+    .send(item);
+  expect(res.status).toBe(200);
+
+  for (let item of res.body.order.items) {
+    expect(item).toEqual(
+      expect.objectContaining({
+        menuId: expect.any(Number),
+        description: expect.any(String),
+        price: expect.any(Number),
       })
     );
   }
