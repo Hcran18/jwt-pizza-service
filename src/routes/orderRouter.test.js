@@ -57,3 +57,21 @@ test("add item to menu as non-admin", async () => {
     .send(item);
   expect(res.status).toBe(403);
 });
+
+test("get menu", async () => {
+  const res = await request(app).get("/api/order/menu");
+  expect(res.status).toBe(200);
+  body = res.body;
+
+  for (let item of body) {
+    expect(item).toEqual(
+      expect.objectContaining({
+        id: expect.any(Number),
+        title: expect.any(String),
+        image: expect.any(String),
+        price: expect.any(Number),
+        description: expect.any(String),
+      })
+    );
+  }
+});
