@@ -1,10 +1,11 @@
 const request = require("supertest");
 const app = require("../service");
 const { DB, Role } = require("../database/database.js");
-const e = require("express");
 
 let adminUser;
 let token;
+let franchiseId;
+let storeId;
 
 function randomName() {
   return Math.random().toString(36).substring(2, 12);
@@ -23,13 +24,38 @@ async function createAdminUser() {
 
 async function login(user) {
   const res = await request(app).put("/api/auth").send(user);
-  console.log(res.body);
   return res.body.token;
+}
+
+async function getMenuID() {
+  const res = await request(app).get("/api/order/menu");
+  if (res.body.length === 0) {
+    return null;
+  }
+  return res.body[0].id;
+}
+
+async function createFranchise() {
+  const res = await request(app)
+    .post("/api/franchise")
+    .set("Authorization", `Bearer ${token}`)
+    .send({ name: randomName(), admins: [{ email: adminUser.email }] });
+  return res.body.id;
+}
+
+async function createStore() {
+  const res = await request(app)
+    .post(`/api/franchise/${franchiseId}/store`)
+    .set("Authorization", `Bearer ${token}`)
+    .send({ franchiseId: franchiseId, name: randomName() });
+  return res.body.id;
 }
 
 beforeAll(async () => {
   adminUser = await createAdminUser();
   token = await login(adminUser);
+  franchiseId = await createFranchise();
+  storeId = await createStore();
 });
 
 test("add item to menu", async () => {
@@ -83,11 +109,13 @@ test("get menu", async () => {
 });
 
 test("create order", async () => {
+  const menuID = await getMenuID();
   const item = {
-    franchiseId: 1,
-    storeId: 1,
-    items: [{ menuId: 1, description: "Veggie", price: 0.05 }],
+    franchiseId: franchiseId,
+    storeId: storeId,
+    items: [{ menuId: menuID, description: "Veggie", price: 0.05 }],
   };
+
   const res = await request(app)
     .post("/api/order")
     .set("Authorization", `Bearer ${token}`)
