@@ -30,11 +30,6 @@ async function login(user) {
   return res.body.token;
 }
 
-async function register(user) {
-  const res = await request(app).post("/api/auth").send(user);
-  return res.body.token;
-}
-
 async function createFranchise() {
   const res = await request(app)
     .post("/api/franchise")
