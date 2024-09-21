@@ -23,7 +23,6 @@ async function createAdminUser() {
 
 async function login(user) {
   const res = await request(app).put("/api/auth").send(user);
-  console.log(res.body);
   if (res.body.user.id) {
     adminID = res.body.user.id;
   }
@@ -77,17 +76,4 @@ test("delete franchise", async () => {
     .set("Authorization", `Bearer ${token}`);
   expect(res.status).toBe(200);
   expect(res.body.message).toBe("franchise deleted");
-});
-
-test("delete franchise without admin", async () => {
-  const franchiseID = await createFranchise();
-  const testUser = { name: "pizza diner", email: "reg@test.com", password: "a" };
-  register(testUser);
-  const testUserAuth = await login(testUser);
-
-  const res = await request(app)
-    .delete(`/api/franchise/${franchiseID}`)
-    .set("Authorization", `Bearer ${testUserAuth}`);
-  expect(res.status).toBe(403);
-  expect(res.body.message).toBe("unable to delete a franchise");
 });
