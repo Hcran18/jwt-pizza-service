@@ -23,7 +23,11 @@ async function createAdminUser() {
 
 async function login(user) {
   const res = await request(app).put("/api/auth").send(user);
-  adminID = res.body.user.id;
+  console.log(res.body);
+  if (res.body.user.id) {
+    adminID = res.body.user.id;
+  }
+
   return res.body.token;
 }
 
