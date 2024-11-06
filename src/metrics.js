@@ -58,11 +58,11 @@ class Metrics {
   reportMetrics() {
     this.sendMetricToGrafana("system", "GET", "cpu_usage", this.getCpuUsagePercentage());
     this.sendMetricToGrafana("system", "GET", "memory_usage", this.getMemoryUsagePercentage());
-    this.sendMetricToGrafana("request", "all", "total_requests", this.totalRequests);
-    this.sendMetricToGrafana("request", "GET", "get_requests", this.getRequests);
-    this.sendMetricToGrafana("request", "POST", "post_requests", this.postRequests);
-    this.sendMetricToGrafana("request", "PUT", "put_requests", this.putRequests);
-    this.sendMetricToGrafana("request", "DELETE", "delete_requests", this.deleteRequests);
+    this.sendMetricToGrafana("request", "all", "total", this.totalRequests);
+    this.sendMetricToGrafana("request", "GET", "total", this.getRequests);
+    this.sendMetricToGrafana("request", "POST", "total", this.postRequests);
+    this.sendMetricToGrafana("request", "PUT", "total", this.putRequests);
+    this.sendMetricToGrafana("request", "DELETE", "total", this.deleteRequests);
   }
 
   sendMetricToGrafana(metricPrefix, httpMethod, metricName, metricValue) {
