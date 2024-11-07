@@ -56,8 +56,8 @@ class Metrics {
   }
 
   reportMetrics() {
-    this.sendMetricToGrafana("system", "GET", "cpu_usage", this.getCpuUsagePercentage());
-    this.sendMetricToGrafana("system", "GET", "memory_usage", this.getMemoryUsagePercentage());
+    this.sendMetricToGrafana("system", "CPU", "usage", this.getCpuUsagePercentage());
+    this.sendMetricToGrafana("system", "MEM", "usage", this.getMemoryUsagePercentage());
     this.sendMetricToGrafana("request", "all", "total", this.totalRequests);
     this.sendMetricToGrafana("request", "GET", "total", this.getRequests);
     this.sendMetricToGrafana("request", "POST", "total", this.postRequests);
