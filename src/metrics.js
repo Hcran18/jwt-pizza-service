@@ -9,6 +9,8 @@ class Metrics {
     this.putRequests = 0;
     this.deleteRequests = 0;
     this.users = 0;
+    this.successAuths = 0;
+    this.failedAuths = 0;
     this.startMetricsReporting();
   }
 
@@ -17,6 +19,14 @@ class Metrics {
       this.users++;
     } else {
       this.users--;
+    }
+  }
+
+  updateAuthCount(successBool) {
+    if (successBool) {
+      this.successAuths++;
+    } else {
+      this.failedAuths++;
     }
   }
 
