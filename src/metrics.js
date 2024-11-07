@@ -8,7 +8,16 @@ class Metrics {
     this.postRequests = 0;
     this.putRequests = 0;
     this.deleteRequests = 0;
+    this.users = 0;
     this.startMetricsReporting();
+  }
+
+  updateUsersCount(loginBool) {
+    if (loginBool) {
+      this.users++;
+    } else {
+      this.users--;
+    }
   }
 
   requestTracker(req, res, next) {
@@ -63,6 +72,7 @@ class Metrics {
     this.sendMetricToGrafana("request", "POST", "total", this.postRequests);
     this.sendMetricToGrafana("request", "PUT", "total", this.putRequests);
     this.sendMetricToGrafana("request", "DELETE", "total", this.deleteRequests);
+    this.sendMetricToGrafana("user", "all", "count", this.users);
   }
 
   sendMetricToGrafana(metricPrefix, httpMethod, metricName, metricValue) {
