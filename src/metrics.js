@@ -83,6 +83,8 @@ class Metrics {
     this.sendMetricToGrafana("request", "PUT", "total", this.putRequests);
     this.sendMetricToGrafana("request", "DELETE", "total", this.deleteRequests);
     this.sendMetricToGrafana("user", "all", "count", this.users);
+    this.sendMetricToGrafana("auth", "success", "count", this.successAuths);
+    this.sendMetricToGrafana("auth", "failed", "count", this.failedAuths);
   }
 
   sendMetricToGrafana(metricPrefix, httpMethod, metricName, metricValue) {
