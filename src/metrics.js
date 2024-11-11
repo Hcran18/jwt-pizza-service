@@ -11,6 +11,9 @@ class Metrics {
     this.users = 0;
     this.successAuths = 0;
     this.failedAuths = 0;
+    this.itemsSold = 0;
+    this.creationFailures = 0;
+    this.totalRevenue = 0;
     this.startMetricsReporting();
   }
 
@@ -28,6 +31,15 @@ class Metrics {
     } else {
       this.failedAuths++;
     }
+  }
+
+  recordSale(itemCount, revenue) {
+    this.itemsSold += itemCount;
+    this.totalRevenue += revenue;
+  }
+
+  recordCreationFailure() {
+    this.creationFailures++;
   }
 
   requestTracker(req, res, next) {
@@ -57,7 +69,18 @@ class Metrics {
   startMetricsReporting() {
     const timer = setInterval(() => {
       this.reportMetrics();
-    }, 10000);
+
+      this.totalRequests = 0;
+      this.getRequests = 0;
+      this.postRequests = 0;
+      this.putRequests = 0;
+      this.deleteRequests = 0;
+      this.successAuths = 0;
+      this.failedAuths = 0;
+      this.itemsSold = 0;
+      this.creationFailures = 0;
+      this.totalRevenue = 0;
+    }, 60000);
     timer.unref();
   }
 
@@ -85,6 +108,9 @@ class Metrics {
     this.sendMetricToGrafana("user", "all", "count", this.users);
     this.sendMetricToGrafana("auth", "success", "count", this.successAuths);
     this.sendMetricToGrafana("auth", "failed", "count", this.failedAuths);
+    this.sendMetricToGrafana("order", "all", "count", this.itemsSold);
+    this.sendMetricToGrafana("order", "failed", "count", this.creationFailures);
+    this.sendMetricToGrafana("order", "revenue", "total", this.totalRevenue);
   }
 
   sendMetricToGrafana(metricPrefix, httpMethod, metricName, metricValue) {
