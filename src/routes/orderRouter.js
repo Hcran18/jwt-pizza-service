@@ -118,6 +118,7 @@ orderRouter.post(
     const order = await DB.addDinerOrder(req.user, orderReq);
 
     const totalOrderValue = order.items.reduce((acc, item) => acc + item.price, 0);
+    const start = Date.now();
 
     const r = await fetch(`${config.factory.url}/api/order`, {
       method: "POST",
@@ -130,6 +131,10 @@ orderRouter.post(
         order,
       }),
     });
+
+    const end = Date.now();
+    metrics.recordPizzaLatency(start, end);
+
     const j = await r.json();
     if (r.ok) {
       metrics.recordSale(order.items.length, totalOrderValue);

@@ -15,6 +15,7 @@ class Metrics {
     this.creationFailures = 0;
     this.totalRevenue = 0;
     this.totalLatency = 0;
+    this.pizzaLatency = 0;
     this.startMetricsReporting();
   }
 
@@ -23,6 +24,10 @@ class Metrics {
       this.users++;
     } else {
       this.users--;
+    }
+
+    if (this.users < 0) {
+      this.users = 0;
     }
   }
 
@@ -46,6 +51,11 @@ class Metrics {
   recordEndpointLatency(start, end) {
     const latency = end - start;
     this.totalLatency = latency;
+  }
+
+  recordPizzaLatency(start, end) {
+    const latency = end - start;
+    this.pizzaLatency = latency;
   }
 
   requestTracker(req, res, next) {
@@ -110,6 +120,7 @@ class Metrics {
     this.sendMetricToGrafana("order", "failed", "count", this.creationFailures);
     this.sendMetricToGrafana("order", "revenue", "total", this.totalRevenue);
     this.sendMetricToGrafana("latency", "all", "total", this.totalLatency);
+    this.sendMetricToGrafana("latency", "all", "pizza", this.pizzaLatency);
   }
 
   sendMetricToGrafana(metricPrefix, httpMethod, metricName, metricValue) {
