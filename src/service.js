@@ -21,6 +21,17 @@ app.use((req, res, next) => {
 
 app.use(metrics.requestTracker.bind(metrics));
 
+app.use((req, res, next) => {
+  const start = Date.now();
+
+  res.on("finish", () => {
+    const end = Date.now();
+    metrics.recordEndpointLatency(start, end);
+  });
+
+  next();
+});
+
 const apiRouter = express.Router();
 app.use("/api", apiRouter);
 apiRouter.use("/auth", authRouter);

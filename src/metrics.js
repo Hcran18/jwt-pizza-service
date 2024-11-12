@@ -14,6 +14,7 @@ class Metrics {
     this.itemsSold = 0;
     this.creationFailures = 0;
     this.totalRevenue = 0;
+    this.totalLatency = 0;
     this.startMetricsReporting();
   }
 
@@ -40,6 +41,11 @@ class Metrics {
 
   recordCreationFailure() {
     this.creationFailures++;
+  }
+
+  recordEndpointLatency(end, start) {
+    const latency = end - start;
+    this.totalLatency = latency;
   }
 
   requestTracker(req, res, next) {
