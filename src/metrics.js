@@ -69,7 +69,7 @@ class Metrics {
   startMetricsReporting() {
     const timer = setInterval(() => {
       this.reportMetrics();
-    }, 60000);
+    }, 10000);
     timer.unref();
   }
 
