@@ -43,7 +43,7 @@ class Metrics {
     this.creationFailures++;
   }
 
-  recordEndpointLatency(end, start) {
+  recordEndpointLatency(start, end) {
     const latency = end - start;
     this.totalLatency = latency;
   }
