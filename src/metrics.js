@@ -109,6 +109,7 @@ class Metrics {
     this.sendMetricToGrafana("order", "all", "count", this.itemsSold);
     this.sendMetricToGrafana("order", "failed", "count", this.creationFailures);
     this.sendMetricToGrafana("order", "revenue", "total", this.totalRevenue);
+    this.sendMetricToGrafana("latency", "all", "total", this.totalLatency);
   }
 
   sendMetricToGrafana(metricPrefix, httpMethod, metricName, metricValue) {
