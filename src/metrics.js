@@ -69,7 +69,10 @@ class Metrics {
   startMetricsReporting() {
     const timer = setInterval(() => {
       this.reportMetrics();
-    }, 10000);
+
+      this.successAuths = 0;
+      this.failedAuths = 0;
+    }, 60000);
     timer.unref();
   }
 
