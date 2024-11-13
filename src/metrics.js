@@ -88,19 +88,9 @@ class Metrics {
     const timer = setInterval(() => {
       this.reportMetrics();
 
-      this.totalRequests = 0;
-      this.getRequests = 0;
-      this.postRequests = 0;
-      this.putRequests = 0;
-      this.deleteRequests = 0;
-      this.users = 0;
-      this.itemsSold = 0;
-      this.creationFailures = 0;
-      this.totalRevenue = 0;
-      this.totalLatency = 0;
-      this.pizzaLatency = 0;
       this.successAuths = 0;
       this.failedAuths = 0;
+      this.totalRevenue = 0;
     }, 60000);
     timer.unref();
   }
